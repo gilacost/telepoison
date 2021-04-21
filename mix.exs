@@ -25,8 +25,8 @@ defmodule Telepoison.MixProject do
   defp deps do
     [
       {:httpoison, "~> 1.6"},
-      {:opentelemetry_api, "~> 0.3.1"},
-      {:opentelemetry, "~> 0.4.0", only: :test},
+      {:opentelemetry, "~> 0.5.0"},
+      {:opentelemetry_api, "~> 0.5.0"},
       {:plug, "~> 1.10", only: :test},
       {:plug_cowboy, "~> 2.2", only: :test},
       {:credo, "~> 1.4", only: [:dev, :test]},
