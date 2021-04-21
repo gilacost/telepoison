@@ -29,26 +29,20 @@ defmodule TelepoisonDD do
     |> process_request_headers()
   end
 
-  def process_request_headers(headers) when is_list(headers) do
-    :otel_propagator.text_map_inject(headers)
-  end
-
   def request(%Request{options: opts} = request) do
     span_name = Keyword.get_lazy(opts, :ot_span_name, fn -> compute_default_span_name(request) end)
-    IO.inspect(request, label: RequestOpts)
 
     attributes =
-      ([
-         {"http.method", request.method},
-         {"http.url", request.url}
-       ] ++ Keyword.get(opts, :ot_attributes, []))
-      |> IO.inspect(label: AttributenInTelepoison)
+      [
+        {"http.method", request.method},
+        {"http.url", request.url}
+      ] ++ Keyword.get(opts, :ot_attributes, [])
 
     new_ctx = OpenTelemetry.Tracer.start_span(span_name, %{attributes: attributes})
 
     _ = Tracer.set_current_span(new_ctx)
 
-    super(%{request | headers: []})
+    super(request)
   end
 
   def process_response_status_code(status_code) do
